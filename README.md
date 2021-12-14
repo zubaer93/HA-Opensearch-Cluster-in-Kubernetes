@@ -1,4 +1,4 @@
-# HA-Opensearch-Cluster-in-Kubernetes
+# Opensearch Cluster in Kubernetes
 
 Creating a 3 node(1 master, 2 data) highly-available Opensearch cluster in Kubernetes. We will create the cluster manually without using Helm.
 
@@ -6,13 +6,14 @@ Creating a 3 node(1 master, 2 data) highly-available Opensearch cluster in Kuber
 
 1. Have to have access to a kubernets cluster (version < 1.22)
 2. Kubectl installed
+3. Docker installed
 
 ## Installation
 
 ### Cluster creation 
 
 1. Run ```kubectl apply -f 1. master-node-deployment.yml```. This will create the master node. 
-2. Run ```kubectl apply -f 2. service.yml``` to create the services
+2. Run ```kubectl apply -f 2. service.yml``` to create the required services.
 3. Now run ```kubectl apply -f 3. data-node-deployment.yml```. This will create 2 data nodes and now our 3 node cluster in up and running. To check this we can run ```kubectl port-forward service/opensearch 9200:9200``` to access the cluster from our browser. Visit [http://localhost:9200/](http://localhost:9200/) from browser 
   
   
@@ -23,9 +24,12 @@ Creating a 3 node(1 master, 2 data) highly-available Opensearch cluster in Kuber
   
   
       ![](/snapshots/cluster-health.png)
+      
+      
+      Here we can see we have 3 nodes available and 2 of those are data nodes. We can always change the number of master or data nodes by changing the replica count from deployment file.
   
   
-      **In our cluster we are not using tls certificates and the security modules are disabled. Therefore there is no https communication between nodes and also no authorization. So this setup is not ideal for production usage**
+      **In our cluster we are not using tls certificates and the security modules are disabled. Therefore there is no https communication between nodes and also no authorization. Also there is no data persistence in the cluster. So this setup is not ideal for production usage**
 
 ### Dashboard creation
 
@@ -44,7 +48,7 @@ To properly route outside traffic to our cluster we have to implement Ingress. W
 
 1. Run ```kubectl apply -f 5. traefik-crd.yml``` to apply all the necessary CustomResourceDefinition for traefik
 2. Now run ```kubectl apply -f 6. traefik.yml```, This will create a traefik pod in the cluster.
-3. Finally run ```kubectl apply -f 7. ingress.yml``` to create the ingress. This will create a LoadBalancer type service which will provide us A EXTERNAL-IP.
+3. Finally run ```kubectl apply -f 7. ingress.yml``` to create the ingress. This will create a LoadBalancer type service which will provide us an EXTERNAL-IP.
 
 
     ![](/snapshots/services.png)
@@ -54,3 +58,9 @@ To properly route outside traffic to our cluster we have to implement Ingress. W
     
     
     ![](/snapshots/dashboard.png)
+    
+## TODO
+
+1. Enable data persistence by introducing StatefulSets
+2. Add secured communication between nodes by enabling tls ecryption 
+3. Add authorization by enabling security plugins
