@@ -44,5 +44,13 @@ To properly route outside traffic to our cluster we have to implement Ingress. W
 
 1. Run ```kubectl apply -f 5. traefik-crd.yml``` to apply all the necessary CustomResourceDefinition for traefik
 2. Now run ```kubectl apply -f 6. traefik.yml```, This will create a traefik pod in the cluster.
-3. Finally run ```kubectl apply -f 7. ingress.yml``` to create the ingress. This will create a LoadBalancer type service which will provide us the EXTERNAL-IP to access our cluster.
+3. Finally run ```kubectl apply -f 7. ingress.yml``` to create the ingress. This will create a LoadBalancer type service which will provide us A EXTERNAL-IP.
 
+
+    ![](/snapshots/services.png)
+    
+    
+    We will use this external ip to access our cluster
+    
+    
+    ![](/snapshots/dashboard.png)
